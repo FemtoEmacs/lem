@@ -419,6 +419,7 @@
   (funcall (etypecase method
              (integer #'compute-indent-integer-method)
              (symbol #'compute-indent-symbol-method)
+             (function #'compute-indent-symbol-method)
              (list #'compute-indent-complex-method))
            method path indent-point sexp-column))
 
@@ -496,6 +497,7 @@
                    (setf innermost-sexp-column sexp-column))
                  (let ((method (find-indent-method name path)))
                    (when method
+                     (setq const-flag nil) ; for the case of (:and ...) in sxql
                      (return-from outer (compute-indent-method method
                                                                path
                                                                indent-point
